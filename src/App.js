@@ -12,7 +12,7 @@ function App() {
       <CellActions />
       <FormulaActions />
       <Grid />
-      <Sheetbar />
+      <Sheetbar sheets={[{ id: 1, name: "Sheet 1" }]} switchSheet={() => {}} />
     </div>
   );
 }
