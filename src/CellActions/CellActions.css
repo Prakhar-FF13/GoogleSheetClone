@@ -1,0 +1,21 @@
+.cell-actions-container {
+  display: flex;
+  padding: 8px;
+  align-items: center;
+  height: 3rem;
+}
+
+.cell-actions {
+  margin: 0 8px;
+  cursor: pointer;
+  display: inline-block;
+  height: 24px;
+}
+
+.font-dropdown {
+  display: inline-block;
+  padding: 0.2rem;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+}

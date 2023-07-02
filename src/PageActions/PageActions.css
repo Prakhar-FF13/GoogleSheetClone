@@ -1,0 +1,11 @@
+.page-actions-container {
+  display: flex;
+  padding: 8px;
+  align-items: flex-end;
+  height: 3rem;
+}
+
+.page-actions {
+  margin: 0 8px;
+  cursor: pointer;
+}

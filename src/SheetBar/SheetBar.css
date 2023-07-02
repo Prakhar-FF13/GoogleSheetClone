@@ -1,0 +1,13 @@
+.sheetbar-container {
+  display: flex;
+  padding: 8px;
+  align-items: center;
+  height: 3rem;
+}
+
+.sheetbar-items {
+  margin: 0 8px;
+  cursor: pointer;
+  display: inline-block;
+  height: 24px;
+}
