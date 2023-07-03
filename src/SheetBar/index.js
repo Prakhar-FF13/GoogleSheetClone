@@ -1,19 +1,35 @@
 import { PostAdd } from "@mui/icons-material";
 import "./SheetBar.css";
+import { CreateSheetAction } from "../reducer";
 
-export default function Sheetbar({ sheets, switchSheet }) {
+export default function Sheetbar({
+  sheets,
+  currentSheet,
+  switchSheet,
+  dispatch,
+}) {
   return (
     <div className="sheetbar-container">
-      <PostAdd className="sheetbar-items" />
+      <PostAdd
+        className="sheetbar-items"
+        onClick={() => {
+          dispatch(CreateSheetAction());
+        }}
+      />
       {sheets &&
+        sheets.length > 0 &&
         sheets.map((s) => {
           return (
             <span
-              key={s.id}
-              onClick={switchSheet}
-              className="sheetbar-items sheet-switch-button"
+              key={s}
+              onClick={() => {
+                switchSheet(s);
+              }}
+              className={`sheetbar-items sheet-switch-button ${
+                currentSheet === s ? "current-sheet" : ""
+              }`}
             >
-              {s.name}
+              {s}
             </span>
           );
         })}

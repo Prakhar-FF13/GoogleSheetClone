@@ -16,3 +16,7 @@
 .sheet-switch-button {
   text-decoration: underline;
 }
+
+.current-sheet {
+  background-color: aliceblue;
+}

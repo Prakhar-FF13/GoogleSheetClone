@@ -1,4 +1,8 @@
 .grid-container {
   flex-grow: 1;
   height: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0 8px;
+  overflow-x: scroll;
 }
