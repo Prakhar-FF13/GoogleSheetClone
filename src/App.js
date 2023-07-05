@@ -9,6 +9,7 @@ import reducer from "./reducer";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, {});
+  const [activeCell, setActiveCell] = useState(null);
   const [currentSheet, switchSheet] = useState(null);
 
   return (
@@ -16,7 +17,12 @@ function App() {
       <PageActions />
       <CellActions />
       <FormulaActions />
-      <Grid />
+      <Grid
+        numRows={state && state[currentSheet] && state[currentSheet].numRows}
+        dispatch={dispatch}
+        activeCell={activeCell}
+        setActiveCell={setActiveCell}
+      />
       <Sheetbar
         sheets={state ? Object.keys(state) : []}
         currentSheet={currentSheet}

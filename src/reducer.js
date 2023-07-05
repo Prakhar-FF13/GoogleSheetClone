@@ -1,10 +1,11 @@
-const alpha = Array.from(Array(26)).map((e, i) => i + 65);
-const alphabet = alpha.map((x) => String.fromCharCode(x));
+import { alphabet } from "./utilities";
 
 function createSheet(state) {
   const sheetName = "sheet" + (state ? Object.keys(state).length + 1 : 1);
   const sheet = {};
-  sheet[sheetName] = {};
+  sheet[sheetName] = {
+    numRows: 50,
+  };
 
   for (let i = 1; i < 50; i++) {
     for (let j = 0; j < 26; j++) {
