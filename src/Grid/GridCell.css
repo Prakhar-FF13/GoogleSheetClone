@@ -5,4 +5,6 @@
   border-right: 1px solid gainsboro;
   padding: 4px;
   height: 30px;
+  width: 150px;
+  overflow-x: scroll;
 }
