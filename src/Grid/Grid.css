@@ -21,8 +21,20 @@
 .grid-numbers {
   padding: 4px;
   border-top: 1px solid darkgrey;
+  color: white;
 }
 
 .grid-section-2 {
   flex: 1;
+  display: flex;
+}
+
+.grid-columns {
+  height: 30px;
+  padding: 4px;
+  width: 150px;
+  text-align: center;
+  background-color: lightslategrey;
+  border-left: 1px solid darkgrey;
+  color: white;
 }

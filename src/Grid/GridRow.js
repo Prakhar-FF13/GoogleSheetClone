@@ -1,11 +1,11 @@
 import "./GridRow.css";
 import GridCell from "./GridCell";
 
-function generateRow({ rowNum, contentEditable }) {
+function generateRow({ rowNum }) {
   const row = [];
   return row;
 }
 
-export default function GridRow({ rowNum, contentEditable }) {
-  return <div className="grid-row">{generateRow(rowNum, contentEditable)}</div>;
+export default function GridRow({ rowNum }) {
+  return <div className="grid-row">{generateRow(rowNum)}</div>;
 }
