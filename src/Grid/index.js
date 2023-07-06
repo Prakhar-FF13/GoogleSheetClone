@@ -1,6 +1,8 @@
 import "./Grid.css";
 import GridRow from "./GridRow";
 import { alphabet } from "../utilities";
+import { useContext } from "react";
+import { SheetContext } from "../context";
 
 const RowNumbers = (numRows) => {
   const r = [];
@@ -33,8 +35,10 @@ const GenerateRows = (numRows) => {
   return r;
 };
 
-export default function Grid({ numRows, dispatch, activeCell, setActiveCell }) {
-  console.log("render");
+export default function Grid({ activeCell, setActiveCell }) {
+  const { state, currentSheet } = useContext(SheetContext);
+  const numRows = state && state[currentSheet] && state[currentSheet].numRows;
+
   return (
     <div className="grid-container">
       <div className="grid-section-1">

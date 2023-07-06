@@ -1,13 +1,12 @@
 import { PostAdd } from "@mui/icons-material";
 import "./SheetBar.css";
 import { CreateSheetAction } from "../reducer";
+import { SheetContext } from "../context";
+import React from "react";
 
-export default function Sheetbar({
-  sheets,
-  currentSheet,
-  switchSheet,
-  dispatch,
-}) {
+export default function Sheetbar({ switchSheet }) {
+  const { state, dispatch, currentSheet } = React.useContext(SheetContext);
+
   return (
     <div className="sheetbar-container">
       <PostAdd
@@ -16,9 +15,10 @@ export default function Sheetbar({
           dispatch(CreateSheetAction());
         }}
       />
-      {sheets &&
-        sheets.length > 0 &&
-        sheets.map((s) => {
+      {state &&
+        Object.keys(state) &&
+        Object.keys(state).length > 0 &&
+        Object.keys(state).map((s) => {
           return (
             <span
               key={s}
