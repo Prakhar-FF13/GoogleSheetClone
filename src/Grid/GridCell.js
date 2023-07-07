@@ -11,16 +11,15 @@ export default function GridCell({ name }) {
   };
 
   return (
-    <span
+    <input
       className="grid-cell"
-      contentEditable
       name={name}
       value={
         state && state[currentSheet] && state[currentSheet][name]["content"]
       }
-      onInput={(e) => {
-        updateCell(e.target.innerText);
+      onChange={(e) => {
+        updateCell(e.target.value);
       }}
-    ></span>
+    ></input>
   );
 }
