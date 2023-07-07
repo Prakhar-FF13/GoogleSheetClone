@@ -26,7 +26,7 @@ function App() {
       />
       <Sheetbar
         switchSheet={switchSheet}
-        state={state}
+        sheets={state && Object.keys(state) && Object.keys(state)}
         dispatch={dispatch}
         currentSheet={currentSheet}
       />

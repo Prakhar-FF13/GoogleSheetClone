@@ -3,12 +3,7 @@ import "./SheetBar.css";
 import { CreateSheetAction } from "../reducer";
 import React from "react";
 
-export default function Sheetbar({
-  switchSheet,
-  state,
-  dispatch,
-  currentSheet,
-}) {
+function Sheetbar({ switchSheet, sheets, dispatch, currentSheet }) {
   return (
     <div className="sheetbar-container">
       <PostAdd
@@ -17,10 +12,8 @@ export default function Sheetbar({
           dispatch(CreateSheetAction());
         }}
       />
-      {state &&
-        Object.keys(state) &&
-        Object.keys(state).length > 0 &&
-        Object.keys(state).map((s) => {
+      {sheets.length > 0 &&
+        sheets.map((s) => {
           return (
             <span
               key={s}
@@ -38,3 +31,5 @@ export default function Sheetbar({
     </div>
   );
 }
+
+export default React.memo(Sheetbar);
