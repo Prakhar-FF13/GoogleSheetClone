@@ -1,25 +1,28 @@
 import "./GridCell.css";
-import { SheetContext } from "../context";
 import React from "react";
 import { UpdateCellAction } from "../reducer";
 
-export default function GridCell({ name }) {
-  const { state, dispatch, currentSheet } = React.useContext(SheetContext);
-
+function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
   const updateCell = (content) => {
-    dispatch(UpdateCellAction(name, { content: content }, currentSheet));
+    dispatch(
+      UpdateCellAction(
+        { ...cellState, content: content },
+        currentSheet,
+        currentRow
+      )
+    );
   };
 
   return (
     <input
       className="grid-cell"
-      name={name}
-      value={
-        state && state[currentSheet] && state[currentSheet][name]["content"]
-      }
+      name={cellState.id}
+      value={cellState && cellState["content"]}
       onChange={(e) => {
         updateCell(e.target.value);
       }}
     ></input>
   );
 }
+
+export default React.memo(GridCell);

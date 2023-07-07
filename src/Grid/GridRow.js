@@ -1,15 +1,30 @@
+import React from "react";
 import "./GridRow.css";
 import GridCell from "./GridCell";
 import { alphabet } from "../utilities";
 
-function generateRow(rowNum) {
+function generateRow(rowNum, rowState, dispatch, currentSheet) {
   const row = [];
   alphabet.forEach((r) => {
-    row.push(<GridCell name={`${r}${rowNum}`} key={`${r}${rowNum}`} />);
+    row.push(
+      <GridCell
+        key={`${r}${rowNum}`}
+        cellState={rowState[r]}
+        dispatch={dispatch}
+        currentSheet={currentSheet}
+        currentRow={rowNum}
+      />
+    );
   });
   return row;
 }
 
-export default function GridRow({ rowNum }) {
-  return <div className="grid-row">{generateRow(rowNum)}</div>;
+function GridRow({ rowNum, rowState, dispatch, currentSheet }) {
+  return (
+    <div className="grid-row">
+      {generateRow(rowNum, rowState, dispatch, currentSheet)}
+    </div>
+  );
 }
+
+export default React.memo(GridRow);

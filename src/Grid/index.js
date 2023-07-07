@@ -1,8 +1,6 @@
 import "./Grid.css";
 import GridRow from "./GridRow";
 import { alphabet } from "../utilities";
-import { useContext } from "react";
-import { SheetContext } from "../context";
 
 const RowNumbers = (numRows) => {
   const r = [];
@@ -28,15 +26,29 @@ const Columns = () => {
   return c;
 };
 
-const GenerateRows = (numRows) => {
+const GenerateRows = (numRows, rowsState, dispatch, currentSheet) => {
   const r = [];
-  for (let i = 1; i <= numRows; i++) r.push(<GridRow rowNum={i} key={i} />);
+  for (let i = 1; i <= numRows; i++)
+    r.push(
+      <GridRow
+        rowNum={i}
+        key={i}
+        rowState={rowsState[i]}
+        dispatch={dispatch}
+        currentSheet={currentSheet}
+      />
+    );
 
   return r;
 };
 
-export default function Grid({ activeCell, setActiveCell }) {
-  const { state, currentSheet } = useContext(SheetContext);
+export default function Grid({
+  activeCell,
+  setActiveCell,
+  state,
+  dispatch,
+  currentSheet,
+}) {
   const numRows = state && state[currentSheet] && state[currentSheet].numRows;
 
   return (
@@ -47,7 +59,14 @@ export default function Grid({ activeCell, setActiveCell }) {
       </div>
       <div className="grid-section-2">
         <div className="grid-columns">{numRows && Columns()}</div>
-        <div>{GenerateRows(numRows)}</div>
+        <div>
+          {GenerateRows(
+            numRows,
+            state !== null ? state[currentSheet] : {},
+            dispatch,
+            currentSheet
+          )}
+        </div>
       </div>
     </div>
   );
