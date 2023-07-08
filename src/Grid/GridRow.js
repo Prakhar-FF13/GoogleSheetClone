@@ -4,17 +4,29 @@ import GridCell from "./GridCell";
 import { alphabet } from "../utilities";
 
 function generateRow(rowNum, rowState, dispatch, currentSheet) {
-  const row = [];
+  const row = [
+    <span className={rowNum > 0 ? "grid-numbers" : "grid-dummy"} key={rowNum}>
+      {rowNum > 0 ? rowNum : ""}
+    </span>,
+  ];
   alphabet.forEach((r) => {
-    row.push(
-      <GridCell
-        key={`${r}${rowNum}`}
-        cellState={rowState[r]}
-        dispatch={dispatch}
-        currentSheet={currentSheet}
-        currentRow={rowNum}
-      />
-    );
+    if (rowNum > 0) {
+      row.push(
+        <GridCell
+          key={`${r}${rowNum}`}
+          cellState={rowState[r]}
+          dispatch={dispatch}
+          currentSheet={currentSheet}
+          currentRow={rowNum}
+        />
+      );
+    } else {
+      row.push(
+        <span className="grid-column" key={r}>
+          {r}
+        </span>
+      );
+    }
   });
   return row;
 }

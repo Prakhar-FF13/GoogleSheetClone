@@ -1,11 +1,10 @@
 .grid-cell {
   flex: 1;
   text-align: center;
-  border:none;
-  border-top: 1px solid gainsboro;
-  border-right: 1px solid gainsboro;
+  border: none;
+  border: 1px solid gainsboro;
   padding: 4px;
-  height: 30px;
+  height: 100%;
   width: 150px;
   outline: none;
   overflow-x: scroll;

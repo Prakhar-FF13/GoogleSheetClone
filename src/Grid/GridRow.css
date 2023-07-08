@@ -1,3 +1,36 @@
 .grid-row {
   display: flex;
 }
+
+.grid-dummy {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+}
+
+.grid-numbers {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+}
+
+.grid-numbers {
+  padding: 4px;
+  color: white;
+  text-align: center;
+  background-color: lightslategrey;
+}
+
+.grid-column {
+  flex: 1;
+  display: inline-block;
+  height: 30px;
+  padding: 4px;
+  min-width: 150px;
+  text-align: center;
+  background-color: lightslategrey;
+  border-left: 1px solid darkgrey;
+  color: white;
+}

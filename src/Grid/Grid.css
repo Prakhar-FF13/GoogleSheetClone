@@ -1,45 +1,7 @@
 .grid-container {
   flex: 1;
   display: flex;
+  flex-direction: column;
+  width: max-content;
   overflow-y: scroll;
-}
-
-.grid-section-1 {
-  width: 30px;
-  background-color: lightslategrey;
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-}
-
-.grid-dummy, .grid-numbers {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-}
-
-.grid-numbers {
-  padding: 4px;
-  border-top: 1px solid darkgrey;
-  color: white;
-}
-
-.grid-section-2 {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.grid-columns {
-  display: flex;
-}
-
-.grid-column {
-  height: 30px;
-  padding: 4px;
-  width: 150px;
-  text-align: center;
-  background-color: lightslategrey;
-  border-left: 1px solid darkgrey;
-  color: white;
 }
