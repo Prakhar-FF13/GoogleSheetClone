@@ -17,13 +17,7 @@ const GenerateRows = (numRows, rowsState, dispatch, currentSheet) => {
   return r;
 };
 
-export default function Grid({
-  activeCell,
-  setActiveCell,
-  state,
-  dispatch,
-  currentSheet,
-}) {
+export default function Grid({ state, dispatch, currentSheet }) {
   const numRows = state && state[currentSheet] && state[currentSheet].numRows;
 
   return (

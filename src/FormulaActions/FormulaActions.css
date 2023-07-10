@@ -13,6 +13,10 @@
   font-size: 20px;
 }
 
+.formula-active-cell {
+  width: 30px;
+}
+
 .formula-group {
   flex: 1;
   display: flex;

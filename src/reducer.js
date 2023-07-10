@@ -1,16 +1,15 @@
 import { alphabet } from "./utilities";
 
-function createSheet(state) {
-  const sheetName = "sheet" + (state ? Object.keys(state).length + 1 : 1);
-  const sheet = {};
-  sheet[sheetName] = {
+function createSheet() {
+  const sheet = {
     numRows: 50,
+    activeCell: null,
   };
 
   for (let i = 1; i <= 50; i++) {
-    sheet[sheetName][i] = {};
+    sheet[i] = {};
     for (let j = 0; j < 26; j++) {
-      sheet[sheetName][i][alphabet[j]] = {
+      sheet[i][alphabet[j]] = {
         id: alphabet[j] + i,
         content: "",
         bold: false,
@@ -26,21 +25,21 @@ function createSheet(state) {
   return sheet;
 }
 
-export default function reducer(state, action) {
+export default function reducer(draft, action) {
   switch (action.type) {
     case "CREATE_SHEET":
-      return Object.assign({ ...state }, createSheet(state));
+      const sheetName = "sheet" + (draft ? Object.keys(draft).length + 1 : 1);
+      draft[sheetName] = createSheet();
+      break;
     case "UPDATE_CELL":
-      const newState = { ...state };
-      newState[action.currentSheet] = { ...state[action.currentSheet] };
-      newState[action.currentSheet][action.currentRow] = {
-        ...state[action.currentSheet][action.currentRow],
-      };
-      newState[action.currentSheet][action.currentRow][action.cellState.id[0]] =
-        { ...action.cellState };
-      return newState;
+      draft[action.currentSheet][action.currentRow][action.cellState.id[0]] =
+        action.cellState;
+      break;
+    case "CHANGE_ACTIVE_CELL":
+      draft[action.currentSheet]["activeCell"] = action.cellState;
+      break;
     default:
-      return state;
+      break;
   }
 }
 
@@ -55,4 +54,8 @@ export const UpdateCellAction = (cellState, currentSheet, currentRow) => {
     currentSheet,
     currentRow,
   };
+};
+
+export const ChangeActiveCell = (cellState, currentSheet) => {
+  return { type: "CHANGE_ACTIVE_CELL", cellState, currentSheet };
 };

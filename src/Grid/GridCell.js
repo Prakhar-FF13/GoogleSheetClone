@@ -1,6 +1,6 @@
 import "./GridCell.css";
 import React from "react";
-import { UpdateCellAction } from "../reducer";
+import { ChangeActiveCell, UpdateCellAction } from "../reducer";
 
 function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
   const updateCell = (content) => {
@@ -13,6 +13,10 @@ function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
     );
   };
 
+  const changeActiveCell = () => {
+    dispatch(ChangeActiveCell(cellState, currentSheet));
+  };
+
   return (
     <input
       className="grid-cell"
@@ -21,6 +25,7 @@ function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
       onChange={(e) => {
         updateCell(e.target.value);
       }}
+      onClick={() => changeActiveCell()}
     ></input>
   );
 }
