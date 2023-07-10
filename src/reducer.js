@@ -17,7 +17,7 @@ function createSheet() {
         underline: false,
         alignment: "left",
         fontFamily: "arial",
-        fontSize: 16,
+        fontSize: 14,
       };
     }
   }

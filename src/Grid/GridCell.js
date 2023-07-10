@@ -17,6 +17,14 @@ function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
     dispatch(ChangeActiveCell(cellState, currentSheet));
   };
 
+  const extraStyle = {
+    textAlign: cellState.alignment,
+    fontFamily: cellState.fontFamily,
+    fontSize: cellState.fontSize,
+    fontWeight: cellState.bold === false ? "normal" : "bold",
+    fontStyle: cellState.italic === false ? "normal" : "italic",
+  };
+
   return (
     <input
       className="grid-cell"
@@ -26,6 +34,7 @@ function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
         updateCell(e.target.value);
       }}
       onClick={() => changeActiveCell()}
+      style={extraStyle}
     ></input>
   );
 }
