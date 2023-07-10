@@ -9,7 +9,10 @@
   margin: 0 8px;
   cursor: pointer;
   display: inline-block;
-  height: 24px;
+}
+
+.cell-action-selected {
+  background-color: lightgray;
 }
 
 .font-dropdown {

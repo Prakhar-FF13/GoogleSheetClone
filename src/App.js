@@ -15,7 +15,11 @@ function App() {
   return (
     <div className="main-container">
       <PageActions />
-      <CellActions />
+      <CellActions
+        activeCell={
+          state && state[currentSheet] && state[currentSheet]["activeCell"]
+        }
+      />
       <FormulaActions
         activeCellId={
           state &&
