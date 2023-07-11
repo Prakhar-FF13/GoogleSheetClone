@@ -19,6 +19,8 @@ function App() {
         activeCell={
           state && state[currentSheet] && state[currentSheet]["activeCell"]
         }
+        dispatch={dispatch}
+        currentSheet={currentSheet}
       />
       <FormulaActions
         activeCellId={
