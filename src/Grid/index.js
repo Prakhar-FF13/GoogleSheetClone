@@ -18,13 +18,15 @@ const GenerateRows = (numRows, rowsState, dispatch, currentSheet) => {
 };
 
 export default function Grid({ state, dispatch, currentSheet }) {
-  const numRows = state && state[currentSheet] && state[currentSheet].numRows;
+  const numRows = state ? state.numRows : -1;
+
+  console.log(state);
 
   return (
     <div className="grid-container">
       {GenerateRows(
         numRows,
-        state !== null ? state[currentSheet] : {},
+        state !== null ? state : {},
         dispatch,
         currentSheet
       )}

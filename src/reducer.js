@@ -36,14 +36,12 @@ export default function reducer(draft, action) {
         action.cellState;
       break;
     case "CHANGE_ACTIVE_CELL":
-      draft[action.currentSheet]["activeCell"] = action.cellState;
+      draft[action.currentSheet]["activeCell"] = action.cellId;
       break;
     case "CHANGE_ACTIVE_CELL_PROPERTIES":
       draft[action.currentSheet][action.cellId[1]][action.cellId[0]][
         action.property
       ] = action.value;
-      draft[action.currentSheet]["activeCell"] =
-        draft[action.currentSheet][action.cellId[1]][action.cellId[0]];
 
       break;
     default:
@@ -64,8 +62,8 @@ export const UpdateCellAction = (cellState, currentSheet, currentRow) => {
   };
 };
 
-export const ChangeActiveCell = (cellState, currentSheet) => {
-  return { type: "CHANGE_ACTIVE_CELL", cellState, currentSheet };
+export const ChangeActiveCell = (cellId, currentSheet) => {
+  return { type: "CHANGE_ACTIVE_CELL", cellId, currentSheet };
 };
 
 export const ChangeActiveCellProperties = (

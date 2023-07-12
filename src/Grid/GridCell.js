@@ -14,7 +14,7 @@ function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
   };
 
   const changeActiveCell = () => {
-    dispatch(ChangeActiveCell(cellState, currentSheet));
+    dispatch(ChangeActiveCell(cellState.id, currentSheet));
   };
 
   const extraStyle = {
@@ -22,7 +22,7 @@ function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
     fontFamily: cellState.fontFamily,
     fontSize: cellState.fontSize + "px",
     fontWeight: cellState.bold === false ? "normal" : "bold",
-    fontStyle: cellState.italic === false ? "none" : "italic",
+    fontStyle: cellState.italic === false ? "normal" : "italic",
     textDecoration: cellState.underline === false ? "none" : "underline",
   };
 
