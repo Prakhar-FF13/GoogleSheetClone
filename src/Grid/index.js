@@ -20,8 +20,6 @@ const GenerateRows = (numRows, rowsState, dispatch, currentSheet) => {
 export default function Grid({ state, dispatch, currentSheet }) {
   const numRows = state ? state.numRows : -1;
 
-  console.log(state);
-
   return (
     <div className="grid-container">
       {GenerateRows(
