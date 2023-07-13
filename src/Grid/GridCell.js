@@ -24,6 +24,8 @@ function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
     fontWeight: cellState.bold === false ? "normal" : "bold",
     fontStyle: cellState.italic === false ? "normal" : "italic",
     textDecoration: cellState.underline === false ? "none" : "underline",
+    color: cellState.color || "black",
+    backgroundColor: cellState.backgroundColor || "white",
   };
 
   return (

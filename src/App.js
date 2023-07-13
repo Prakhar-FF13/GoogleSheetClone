@@ -12,6 +12,9 @@ function App() {
   const [state, dispatch] = useReducer(produce(reducer), {});
   const [currentSheet, switchSheet] = useState(null);
 
+  // const activeCellId =
+  //   state && state[currentSheet] && state[currentSheet]["activeCell"];
+
   const activeCellRow =
     state &&
     state[currentSheet] &&

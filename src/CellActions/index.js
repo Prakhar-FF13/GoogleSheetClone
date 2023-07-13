@@ -7,6 +7,8 @@ import {
   FormatAlignLeft,
   FormatAlignRight,
   FormatBold,
+  FormatColorFill,
+  FormatColorText,
   FormatItalic,
   FormatUnderlined,
 } from "@mui/icons-material";
@@ -15,69 +17,94 @@ export default function CellActions({ activeCell, dispatch, currentSheet }) {
   if (!activeCell) activeCell = {};
 
   const changeFontFamily = (e) => {
-    dispatch(
-      ChangeActiveCellProperties(
-        activeCell.id,
-        currentSheet,
-        "fontFamily",
-        e.target.value
-      )
-    );
+    activeCell.id &&
+      dispatch(
+        ChangeActiveCellProperties(
+          activeCell.id,
+          currentSheet,
+          "fontFamily",
+          e.target.value
+        )
+      );
   };
 
   const changeFontSize = (e) => {
-    dispatch(
-      ChangeActiveCellProperties(
-        activeCell.id,
-        currentSheet,
-        "fontSize",
-        e.target.value
-      )
-    );
+    activeCell.id &&
+      dispatch(
+        ChangeActiveCellProperties(
+          activeCell.id,
+          currentSheet,
+          "fontSize",
+          e.target.value
+        )
+      );
   };
 
   const changeBoldProp = () => {
-    dispatch(
-      ChangeActiveCellProperties(
-        activeCell.id,
-        currentSheet,
-        "bold",
-        !activeCell.bold
-      )
-    );
+    activeCell.id &&
+      dispatch(
+        ChangeActiveCellProperties(
+          activeCell.id,
+          currentSheet,
+          "bold",
+          !activeCell.bold
+        )
+      );
   };
 
   const changeItalicProp = () => {
-    dispatch(
-      ChangeActiveCellProperties(
-        activeCell.id,
-        currentSheet,
-        "italic",
-        !activeCell.italic
-      )
-    );
+    activeCell.id &&
+      dispatch(
+        ChangeActiveCellProperties(
+          activeCell.id,
+          currentSheet,
+          "italic",
+          !activeCell.italic
+        )
+      );
   };
 
   const changeUnderlineProp = () => {
-    dispatch(
-      ChangeActiveCellProperties(
-        activeCell.id,
-        currentSheet,
-        "underline",
-        !activeCell.underline
-      )
-    );
+    activeCell.id &&
+      dispatch(
+        ChangeActiveCellProperties(
+          activeCell.id,
+          currentSheet,
+          "underline",
+          !activeCell.underline
+        )
+      );
   };
 
   const changeAlignment = (value) => {
-    dispatch(
-      ChangeActiveCellProperties(
-        activeCell.id,
-        currentSheet,
-        "alignment",
-        value
-      )
-    );
+    activeCell.id &&
+      dispatch(
+        ChangeActiveCellProperties(
+          activeCell.id,
+          currentSheet,
+          "alignment",
+          value
+        )
+      );
+  };
+
+  const changeTextColor = (value) => {
+    activeCell.id &&
+      dispatch(
+        ChangeActiveCellProperties(activeCell.id, currentSheet, "color", value)
+      );
+  };
+
+  const changeBackgroundColor = (value) => {
+    activeCell.id &&
+      dispatch(
+        ChangeActiveCellProperties(
+          activeCell.id,
+          currentSheet,
+          "backgroundColor",
+          value
+        )
+      );
   };
 
   return (
@@ -148,6 +175,24 @@ export default function CellActions({ activeCell, dispatch, currentSheet }) {
         }`}
         onClick={() => changeAlignment("right")}
       />
+      <div className="cell-actions cell-action-choose-color">
+        <FormatColorText />
+        <input
+          type="color"
+          className="cell-action-color-input"
+          onChange={(e) => changeTextColor(e.target.value)}
+          value={activeCell.color || "black"}
+        />
+      </div>
+      <div className="cell-actions cell-action-choose-color">
+        <FormatColorFill />
+        <input
+          type="color"
+          className="cell-action-color-input"
+          onChange={(e) => changeBackgroundColor(e.target.value)}
+          value={activeCell.backgroundColor || "white"}
+        />
+      </div>
     </div>
   );
 }

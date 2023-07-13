@@ -18,6 +18,8 @@ function createSheet() {
         alignment: "left",
         fontFamily: "arial",
         fontSize: 14,
+        color: "black",
+        backgroundColor: "white",
       };
     }
   }
