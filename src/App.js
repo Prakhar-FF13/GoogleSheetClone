@@ -8,13 +8,21 @@ import Sheetbar from "./SheetBar";
 import reducer from "./reducer";
 import { produce } from "immer";
 
+/**
+ * App component holds the main state as well as genrates the UI.
+ * It displays the main bars (main menu, cell action menu),
+ * footer component to create sheets and a Grid component to display cells.
+ *
+ */
+
 function App() {
+  // main state is help by this component as it is needed by more than 1 components.
   const [state, dispatch] = useReducer(produce(reducer), {});
+
+  // this state var is used to switch btw multiple sheets
   const [currentSheet, switchSheet] = useState(null);
 
-  // const activeCellId =
-  //   state && state[currentSheet] && state[currentSheet]["activeCell"];
-
+  // clicking makes a cell active, below 2 variables get the row and col of active cell.
   const activeCellRow =
     state &&
     state[currentSheet] &&

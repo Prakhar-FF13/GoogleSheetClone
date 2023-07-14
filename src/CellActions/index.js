@@ -13,6 +13,11 @@ import {
   FormatUnderlined,
 } from "@mui/icons-material";
 
+/**
+ * This component is used to change cell styles like - bold, alignment, etc.
+ * It used the activeCell info from main state and uses dispatch to send updates styles.
+ *
+ */
 export default function CellActions({ activeCell, dispatch, currentSheet }) {
   if (!activeCell) activeCell = {};
 

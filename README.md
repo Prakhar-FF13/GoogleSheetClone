@@ -2,7 +2,7 @@
 > A spreadsheet editing app build using Reactjs.
 
 ## Screenshot:
-<img src="/screenshot.png" alt="image-app"/>
+<img src="./public/screenshot.png" alt="image-app"/>
 
 ## Features: 
 

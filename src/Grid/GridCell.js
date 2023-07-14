@@ -2,7 +2,15 @@ import "./GridCell.css";
 import React from "react";
 import { ChangeActiveCell, UpdateCellAction } from "../reducer";
 
+/**
+ * This component is used to an individual cell.
+ * It setups the handles to handle updating Cell information.
+ * It also changes the activeCell when clicked on it.
+ * disptach function is used to update the state with new information.
+ *
+ */
 function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
+  // cell content change, update main app state.
   const updateCell = (content) => {
     dispatch(
       UpdateCellAction(
@@ -13,10 +21,13 @@ function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
     );
   };
 
+  // on clicking makes this cell active, notify with update state.
   const changeActiveCell = () => {
     dispatch(ChangeActiveCell(cellState.id, currentSheet));
   };
 
+  // styles to be applied, stored in state.
+  // these stles can be changed via cell actions component.
   const extraStyle = {
     textAlign: cellState.alignment,
     fontFamily: cellState.fontFamily,

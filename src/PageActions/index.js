@@ -1,5 +1,10 @@
 import "./PageActions.css";
 
+/**
+ * This component is used to create Main Menu.
+ * Functionality is yet to be coded.
+ *
+ */
 export default function PageActions() {
   return (
     <div className="page-actions-container">
