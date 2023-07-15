@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import CellActions from "./CellActions";
 import FormulaActions from "./FormulaActions";
 import Grid from "./Grid";
@@ -28,15 +28,6 @@ function App() {
   const activeCellRow = activeCellId && state[currentSheet]["activeCell"][1];
   const activeCellCol = activeCellId && state[currentSheet]["activeCell"][0];
 
-  useEffect(() => {
-    const active = document.querySelector(`#${currentSheet}-${activeCellId}`);
-    active && active.classList.add("grid-cell-active");
-
-    return () => {
-      active && active.classList.remove("grid-cell-active");
-    };
-  }, [activeCellId, currentSheet]);
-
   return (
     <div className="main-container">
       <PageActions />
@@ -51,6 +42,7 @@ function App() {
         activeCellId={
           state && state[currentSheet] && state[currentSheet]["activeCell"]
         }
+        currentSheet={currentSheet}
       />
       <Grid
         state={currentSheet && state[currentSheet]}
