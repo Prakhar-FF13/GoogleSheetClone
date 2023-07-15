@@ -41,6 +41,7 @@ function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
 
   return (
     <input
+      id={currentSheet + "-" + cellState.id}
       className="grid-cell"
       name={cellState.id}
       value={cellState && cellState["content"]}

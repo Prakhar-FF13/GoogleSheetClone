@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import CellActions from "./CellActions";
 import FormulaActions from "./FormulaActions";
 import Grid from "./Grid";
@@ -23,26 +23,26 @@ function App() {
   const [currentSheet, switchSheet] = useState(null);
 
   // clicking makes a cell active, below 2 variables get the row and col of active cell.
-  const activeCellRow =
-    state &&
-    state[currentSheet] &&
-    state[currentSheet]["activeCell"] &&
-    state[currentSheet]["activeCell"][1];
-  const activeCellCol =
-    state &&
-    state[currentSheet] &&
-    state[currentSheet]["activeCell"] &&
-    state[currentSheet]["activeCell"][0];
+  const activeCellId =
+    state && state[currentSheet] && state[currentSheet]["activeCell"];
+  const activeCellRow = activeCellId && state[currentSheet]["activeCell"][1];
+  const activeCellCol = activeCellId && state[currentSheet]["activeCell"][0];
+
+  useEffect(() => {
+    const active = document.querySelector(`#${currentSheet}-${activeCellId}`);
+    active && active.classList.add("grid-cell-active");
+
+    return () => {
+      active && active.classList.remove("grid-cell-active");
+    };
+  }, [activeCellId, currentSheet]);
 
   return (
     <div className="main-container">
       <PageActions />
       <CellActions
         activeCell={
-          state &&
-          state[currentSheet] &&
-          state[currentSheet]["activeCell"] &&
-          state[currentSheet][activeCellRow][activeCellCol]
+          activeCellId && state[currentSheet][activeCellRow][activeCellCol]
         }
         dispatch={dispatch}
         currentSheet={currentSheet}

@@ -10,7 +10,10 @@ export default function FormulaActions({ activeCellId }) {
       <div className="formula-items formula-active-cell">{activeCellId}</div>
       <div className="formula-items formula-group">
         <span className="fx">fx</span>
-        <input className="formula-input"></input>
+        <input
+          className="formula-input"
+          placeholder="Enter a valid mathematical expression"
+        />
       </div>
     </div>
   );

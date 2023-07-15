@@ -8,3 +8,7 @@
   outline: none;
   overflow-x: scroll;
 }
+
+.grid-cell-active {
+  border: 1px solid blue;
+}
