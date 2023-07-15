@@ -27,7 +27,6 @@ function generateRow(rowNum, rowState, dispatch, currentSheet) {
           cellState={rowState[r]}
           dispatch={dispatch}
           currentSheet={currentSheet}
-          currentRow={rowNum}
         />
       );
     } else {

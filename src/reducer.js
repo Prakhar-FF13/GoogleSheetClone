@@ -33,10 +33,6 @@ export default function reducer(draft, action) {
       const sheetName = "sheet" + (draft ? Object.keys(draft).length + 1 : 1);
       draft[sheetName] = createSheet();
       break;
-    case "UPDATE_CELL":
-      draft[action.currentSheet][action.currentRow][action.cellState.id[0]] =
-        action.cellState;
-      break;
     case "CHANGE_ACTIVE_CELL":
       draft[action.currentSheet]["activeCell"] = action.cellId;
       break;
@@ -53,15 +49,6 @@ export default function reducer(draft, action) {
 
 export const CreateSheetAction = () => {
   return { type: "CREATE_SHEET" };
-};
-
-export const UpdateCellAction = (cellState, currentSheet, currentRow) => {
-  return {
-    type: "UPDATE_CELL",
-    cellState,
-    currentSheet,
-    currentRow,
-  };
 };
 
 export const ChangeActiveCell = (cellId, currentSheet) => {
