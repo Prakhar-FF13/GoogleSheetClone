@@ -43,6 +43,8 @@ function App() {
           state && state[currentSheet] && state[currentSheet]["activeCell"]
         }
         currentSheet={currentSheet}
+        sheet={state && state[currentSheet]}
+        dispatch={dispatch}
       />
       <Grid
         state={currentSheet && state[currentSheet]}

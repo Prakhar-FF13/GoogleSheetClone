@@ -48,7 +48,7 @@ function GridCell({ cellState, dispatch, currentSheet, currentRow }) {
       onChange={(e) => {
         updateCell(e.target.value);
       }}
-      onClick={() => changeActiveCell()}
+      onFocus={() => changeActiveCell()}
       style={extraStyle}
     />
   );
