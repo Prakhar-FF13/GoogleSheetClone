@@ -6,7 +6,9 @@ import PageActions from "./PageActions";
 import "./App.css";
 import Sheetbar from "./SheetBar";
 import reducer from "./reducer";
-import { produce } from "immer";
+import { produce, enableMapSet } from "immer";
+
+enableMapSet();
 
 /**
  * App component holds the main state as well as genrates the UI.

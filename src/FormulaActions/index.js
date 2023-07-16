@@ -5,7 +5,11 @@ import {
   evaluatePostFix,
   getCellValuesInPostfix,
 } from "./infixToPostfix";
-import { AddDependentCell, ChangeActiveCellProperties } from "../reducer";
+import {
+  AddDependentCell,
+  ChangeActiveCellProperties,
+  RemoveDependentCell,
+} from "../reducer";
 
 /**
  * This component is used to display current active cell and allows formula evaulation
@@ -17,6 +21,12 @@ export default function FormulaActions({
   sheet,
   dispatch,
 }) {
+  const [fx, setFx] = useState(
+    sheet && activeCellId && activeCellId.length >= 2
+      ? sheet[activeCellId.slice(1)][activeCellId[0]].formula
+      : ""
+  );
+
   // using the active cell and current sheet prop
   // give a border arounc the active cell.
   useEffect(() => {
@@ -26,16 +36,18 @@ export default function FormulaActions({
     // add the border class.
     active && active.classList.add("grid-cell-active");
 
+    setFx(
+      sheet && activeCellId && activeCellId.length >= 2
+        ? sheet[activeCellId.slice(1)][activeCellId[0]].formula
+        : ""
+    );
+
     return () => {
       active && active.classList.remove("grid-cell-active");
     };
-  }, [activeCellId, currentSheet]);
+  }, [activeCellId, currentSheet, sheet]);
 
-  const [fx, setFx] = useState(
-    sheet && activeCellId && activeCellId.length >= 2
-      ? sheet[activeCellId.slice(1)][activeCellId[0]].formula
-      : ""
-  );
+  console.log(sheet);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && fx && fx.length) {
@@ -62,9 +74,35 @@ export default function FormulaActions({
       dispatch(
         ChangeActiveCellProperties(activeCellId, currentSheet, "content", val)
       );
+
+      // remove old formula dependencies.
+      if (
+        sheet &&
+        activeCellId &&
+        activeCellId.length >= 2 &&
+        sheet[activeCellId.slice(1)][activeCellId[0]].formula
+      ) {
+        dispatch(
+          RemoveDependentCell(
+            activeCellId,
+            getCellValuesInPostfix(
+              // get old formula dependencies by parsing old formula for this cell
+              infixToPostfix(
+                sheet[activeCellId.slice(1)][activeCellId[0]].formula
+              )[0],
+              activeCellId,
+              sheet
+            )[1],
+            currentSheet
+          )
+        );
+      }
+
       dispatch(
         ChangeActiveCellProperties(activeCellId, currentSheet, "formula", fx)
       );
+
+      // add new formula dependencies.
       dispatch(AddDependentCell(activeCellId, dependentOn, currentSheet));
     }
   };

@@ -20,7 +20,7 @@ function createSheet() {
         fontSize: 14,
         color: "black",
         backgroundColor: "white",
-        dependentCells: [],
+        dependentCells: new Set(),
         formula: "",
       };
     }
@@ -45,7 +45,14 @@ export default function reducer(draft, action) {
       break;
     case "ADD_DEPENDENT_CELLS":
       action.dependentOn.forEach((id) => {
-        draft[action.currentSheet][id.slice(1)][id[0]].dependentCells.push(
+        draft[action.currentSheet][id.slice(1)][id[0]].dependentCells.add(
+          action.activeCellId
+        );
+      });
+      break;
+    case "REMOVE_DEPENDENT_CELLS":
+      action.dependentOn.forEach((id) => {
+        draft[action.currentSheet][id.slice(1)][id[0]].dependentCells.delete(
           action.activeCellId
         );
       });
@@ -81,6 +88,19 @@ export const ChangeActiveCellProperties = (
 export const AddDependentCell = (activeCellId, dependentOn, currentSheet) => {
   return {
     type: "ADD_DEPENDENT_CELLS",
+    activeCellId,
+    dependentOn,
+    currentSheet,
+  };
+};
+
+export const RemoveDependentCell = (
+  activeCellId,
+  dependentOn,
+  currentSheet
+) => {
+  return {
+    type: "REMOVE_DEPENDENT_CELLS",
     activeCellId,
     dependentOn,
     currentSheet,
