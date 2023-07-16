@@ -1,7 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./FormulaActions.css";
-import { infixToPostfix, evaluatePostFix } from "./infixToPostfix";
-import { ChangeActiveCellProperties } from "../reducer";
+import {
+  infixToPostfix,
+  evaluatePostFix,
+  getCellValuesInPostfix,
+} from "./infixToPostfix";
+import { AddDependentCell, ChangeActiveCellProperties } from "../reducer";
 
 /**
  * This component is used to display current active cell and allows formula evaulation
@@ -27,52 +31,41 @@ export default function FormulaActions({
     };
   }, [activeCellId, currentSheet]);
 
+  const [fx, setFx] = useState(
+    sheet && activeCellId && activeCellId.length >= 2
+      ? sheet[activeCellId.slice(1)][activeCellId[0]].formula
+      : ""
+  );
+
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && e.target.value && e.target.value.length) {
-      const [postfixArray, err] = infixToPostfix(e.target.value);
+    if (e.key === "Enter" && fx && fx.length) {
+      const [formulaArrayPostfix, err] = infixToPostfix(fx);
 
       if (err) {
-        alert(err);
+        console.log(err);
         return;
       }
-      for (let i = 0; i < postfixArray.length; i++) {
-        // if a literal like 10 - convert directly to integer.
-        if (postfixArray[i][0] >= "0" && postfixArray[i][0] <= "9")
-          postfixArray[i] = parseInt(postfixArray[i]);
-        // if given cell id like C10 then first get the text in the cell.
-        // check if cell contains a number or not.
-        // if not return display an error.
-        else if (postfixArray[i][0] >= "A" && postfixArray[i][0] <= "Z") {
-          let s = postfixArray[i];
-          let cellContent = sheet[s.slice(1)][s[0]].content;
 
-          let allNum = true;
-          // check if cell content is numbers only.
-          for (let j = 0; j < cellContent.length; j++) {
-            allNum &= cellContent[j] >= "0" && cellContent[j] <= "9";
-          }
-          if (allNum === false) {
-            alert(`cell ${s} does not have an integer value`);
-            return;
-          }
-          if (cellContent && cellContent.length && allNum) {
-            postfixArray[i] = parseInt(cellContent);
-          } else {
-            postfixArray[i] = 0;
-          }
-        }
-      }
+      const [postfixArray, dependentOn] = getCellValuesInPostfix(
+        formulaArrayPostfix,
+        activeCellId,
+        sheet
+      );
 
       const [val, err2] = evaluatePostFix(postfixArray);
 
       if (err2) {
-        alert(err2);
+        console.log(err2);
         return;
       }
 
       dispatch(
         ChangeActiveCellProperties(activeCellId, currentSheet, "content", val)
       );
+      dispatch(
+        ChangeActiveCellProperties(activeCellId, currentSheet, "formula", fx)
+      );
+      dispatch(AddDependentCell(activeCellId, dependentOn, currentSheet));
     }
   };
 
@@ -87,6 +80,8 @@ export default function FormulaActions({
           onKeyDown={(e) => {
             handleKeyDown(e);
           }}
+          value={fx}
+          onChange={(e) => setFx(e.target.value)}
         />
       </div>
     </div>

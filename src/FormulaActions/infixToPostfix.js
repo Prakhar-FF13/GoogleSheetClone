@@ -109,6 +109,51 @@ export function infixToPostfix(infix) {
   return [output, null];
 }
 
+export function getCellValuesInPostfix(postfixArray, activeCellId, sheet) {
+  // active cell will be dependent on cells in formula, store them here.
+  const dependentOn = [];
+
+  for (let i = 0; i < postfixArray.length; i++) {
+    // if a literal like 10 - convert directly to integer.
+    if (postfixArray[i][0] >= "0" && postfixArray[i][0] <= "9")
+      postfixArray[i] = parseInt(postfixArray[i]);
+    // if given cell id like C10 then first get the text in the cell.
+    // check if cell contains a number or not.
+    // if not return display an error.
+    else if (postfixArray[i][0] >= "A" && postfixArray[i][0] <= "Z") {
+      let s = postfixArray[i];
+
+      if (activeCellId === s) {
+        alert(
+          "Please select another cell to store the result, formula cannot contain the same cell where the result is to be stored."
+        );
+        return;
+      }
+
+      // the cell value is dependent on these cells. whenever these cells change, active cells content will also change.
+      dependentOn.push(s);
+      let cellContent = sheet[s.slice(1)][s[0]].content;
+
+      let allNum = true;
+      // check if cell content is numbers only.
+      for (let j = 0; j < cellContent.length; j++) {
+        allNum &= cellContent[j] >= "0" && cellContent[j] <= "9";
+      }
+      if (allNum === false) {
+        console.log(`cell ${s} does not have an integer value`);
+        return;
+      }
+      if (cellContent && cellContent.length && allNum) {
+        postfixArray[i] = parseInt(cellContent);
+      } else {
+        postfixArray[i] = 0;
+      }
+    }
+  }
+
+  return [postfixArray, dependentOn];
+}
+
 export function evaluatePostFix(postfixArray) {
   let i = 0;
   let stack = [];

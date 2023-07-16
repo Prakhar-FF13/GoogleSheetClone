@@ -25,7 +25,8 @@ function App() {
   // clicking makes a cell active, below 2 variables get the row and col of active cell.
   const activeCellId =
     state && state[currentSheet] && state[currentSheet]["activeCell"];
-  const activeCellRow = activeCellId && state[currentSheet]["activeCell"][1];
+  const activeCellRow =
+    activeCellId && state[currentSheet]["activeCell"].slice(1);
   const activeCellCol = activeCellId && state[currentSheet]["activeCell"][0];
 
   return (
