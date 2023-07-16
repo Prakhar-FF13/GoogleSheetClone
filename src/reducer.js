@@ -1,4 +1,9 @@
 import { alphabet } from "./utilities";
+import {
+  infixToPostfix,
+  evaluatePostFix,
+  getCellValuesInPostfix,
+} from "./FormulaActions/infixToPostfix";
 
 function createSheet() {
   const sheet = {
@@ -57,6 +62,35 @@ export default function reducer(draft, action) {
         );
       });
       break;
+    case "REEVALUATE_FORMULA":
+      const cellId = action.cellId,
+        cellRow = cellId.slice(1),
+        cellCol = cellId[0],
+        currentSheet = action.currentSheet,
+        formula = draft[currentSheet][cellRow][cellCol].formula;
+
+      const [formulaArrayPostfix, err] = infixToPostfix(formula);
+
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      const [postfixArray] = getCellValuesInPostfix(
+        formulaArrayPostfix,
+        cellId,
+        draft[currentSheet]
+      );
+
+      const [val, err2] = evaluatePostFix(postfixArray);
+
+      if (err2) {
+        console.log(err2);
+        return;
+      }
+
+      draft[currentSheet][cellRow][cellCol]["content"] = val;
+      break;
     default:
       break;
   }
@@ -103,6 +137,14 @@ export const RemoveDependentCell = (
     type: "REMOVE_DEPENDENT_CELLS",
     activeCellId,
     dependentOn,
+    currentSheet,
+  };
+};
+
+export const ReevaluateFormula = (cellId, currentSheet) => {
+  return {
+    type: "REEVALUATE_FORMULA",
+    cellId,
     currentSheet,
   };
 };

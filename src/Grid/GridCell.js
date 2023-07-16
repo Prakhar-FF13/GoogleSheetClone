@@ -1,6 +1,10 @@
 import "./GridCell.css";
 import React from "react";
-import { ChangeActiveCell, ChangeActiveCellProperties } from "../reducer";
+import {
+  ChangeActiveCell,
+  ChangeActiveCellProperties,
+  ReevaluateFormula,
+} from "../reducer";
 
 /**
  * This component is used to an individual cell.
@@ -15,6 +19,10 @@ function GridCell({ cellState, dispatch, currentSheet }) {
     dispatch(
       ChangeActiveCellProperties(cellState.id, currentSheet, "content", content)
     );
+
+    cellState.dependentCells.forEach((id) => {
+      dispatch(ReevaluateFormula(id, currentSheet));
+    });
   };
 
   // on clicking makes this cell active, notify with update state.

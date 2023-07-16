@@ -47,8 +47,6 @@ export default function FormulaActions({
     };
   }, [activeCellId, currentSheet, sheet]);
 
-  console.log(sheet);
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && fx && fx.length) {
       const [formulaArrayPostfix, err] = infixToPostfix(fx);
