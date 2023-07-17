@@ -47,6 +47,8 @@ export default function FormulaActions({
     };
   }, [activeCellId, currentSheet, sheet]);
 
+  console.log(sheet);
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && fx && fx.length) {
       const [formulaArrayPostfix, err] = infixToPostfix(fx);
@@ -80,20 +82,7 @@ export default function FormulaActions({
         activeCellId.length >= 2 &&
         sheet[activeCellId.slice(1)][activeCellId[0]].formula
       ) {
-        dispatch(
-          RemoveDependentCell(
-            activeCellId,
-            getCellValuesInPostfix(
-              // get old formula dependencies by parsing old formula for this cell
-              infixToPostfix(
-                sheet[activeCellId.slice(1)][activeCellId[0]].formula
-              )[0],
-              activeCellId,
-              sheet
-            )[1],
-            currentSheet
-          )
-        );
+        dispatch(RemoveDependentCell(activeCellId, currentSheet));
       }
 
       dispatch(

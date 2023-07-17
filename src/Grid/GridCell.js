@@ -4,6 +4,7 @@ import {
   ChangeActiveCell,
   ChangeActiveCellProperties,
   ReevaluateFormula,
+  RemoveDependentCell,
 } from "../reducer";
 
 /**
@@ -18,6 +19,12 @@ function GridCell({ cellState, dispatch, currentSheet }) {
   const updateCell = (content) => {
     dispatch(
       ChangeActiveCellProperties(cellState.id, currentSheet, "content", content)
+    );
+
+    dispatch(RemoveDependentCell(cellState.id, currentSheet));
+
+    dispatch(
+      ChangeActiveCellProperties(cellState.id, currentSheet, "formula", "")
     );
 
     cellState.dependentCells.forEach((id) => {

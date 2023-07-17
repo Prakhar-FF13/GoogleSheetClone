@@ -88,11 +88,29 @@ export default function reducer(draft, action) {
       });
       break;
     case "REMOVE_DEPENDENT_CELLS":
-      action.dependentOn.forEach((id) => {
+      const cellRow = action.activeCellId.slice(1),
+        cellCol = action.activeCellId[0],
+        formula = draft[action.currentSheet][cellRow][cellCol].formula;
+
+      const [formulaArrayPostfix, err] = infixToPostfix(formula);
+
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      const [, dependentOn] = getCellValuesInPostfix(
+        formulaArrayPostfix,
+        action.activeCellId,
+        draft[action.currentSheet]
+      );
+
+      dependentOn.forEach((id) => {
         draft[action.currentSheet][id.slice(1)][id[0]].dependentCells.delete(
           action.activeCellId
         );
       });
+
       break;
     case "REEVALUATE_FORMULA":
       ReevaluateFormulaRecursive(action.cellId, action.currentSheet, draft);
@@ -134,15 +152,10 @@ export const AddDependentCell = (activeCellId, dependentOn, currentSheet) => {
   };
 };
 
-export const RemoveDependentCell = (
-  activeCellId,
-  dependentOn,
-  currentSheet
-) => {
+export const RemoveDependentCell = (activeCellId, currentSheet) => {
   return {
     type: "REMOVE_DEPENDENT_CELLS",
     activeCellId,
-    dependentOn,
     currentSheet,
   };
 };
