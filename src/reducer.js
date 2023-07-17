@@ -34,6 +34,38 @@ function createSheet() {
   return sheet;
 }
 
+function ReevaluateFormulaRecursive(cellId, currentSheet, draft) {
+  const cellRow = cellId.slice(1),
+    cellCol = cellId[0],
+    formula = draft[currentSheet][cellRow][cellCol].formula;
+
+  const [formulaArrayPostfix, err] = infixToPostfix(formula);
+
+  if (err) {
+    console.log(err);
+    return;
+  }
+
+  const [postfixArray] = getCellValuesInPostfix(
+    formulaArrayPostfix,
+    cellId,
+    draft[currentSheet]
+  );
+
+  const [val, err2] = evaluatePostFix(postfixArray);
+
+  if (err2) {
+    console.log(err2);
+    return;
+  }
+
+  draft[currentSheet][cellRow][cellCol]["content"] = val;
+
+  draft[currentSheet][cellRow][cellCol].dependentCells.forEach((cid) => {
+    ReevaluateFormulaRecursive(cid, currentSheet, draft);
+  });
+}
+
 export default function reducer(draft, action) {
   switch (action.type) {
     case "CREATE_SHEET":
@@ -63,33 +95,7 @@ export default function reducer(draft, action) {
       });
       break;
     case "REEVALUATE_FORMULA":
-      const cellId = action.cellId,
-        cellRow = cellId.slice(1),
-        cellCol = cellId[0],
-        currentSheet = action.currentSheet,
-        formula = draft[currentSheet][cellRow][cellCol].formula;
-
-      const [formulaArrayPostfix, err] = infixToPostfix(formula);
-
-      if (err) {
-        console.log(err);
-        return;
-      }
-
-      const [postfixArray] = getCellValuesInPostfix(
-        formulaArrayPostfix,
-        cellId,
-        draft[currentSheet]
-      );
-
-      const [val, err2] = evaluatePostFix(postfixArray);
-
-      if (err2) {
-        console.log(err2);
-        return;
-      }
-
-      draft[currentSheet][cellRow][cellCol]["content"] = val;
+      ReevaluateFormulaRecursive(action.cellId, action.currentSheet, draft);
       break;
     default:
       break;

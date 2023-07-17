@@ -132,7 +132,7 @@ export function getCellValuesInPostfix(postfixArray, activeCellId, sheet) {
 
       // the cell value is dependent on these cells. whenever these cells change, active cells content will also change.
       dependentOn.push(s);
-      let cellContent = sheet[s.slice(1)][s[0]].content;
+      const cellContent = sheet[s.slice(1)][s[0]].content || "";
 
       let allNum = true;
       // check if cell content is numbers only.
@@ -143,7 +143,7 @@ export function getCellValuesInPostfix(postfixArray, activeCellId, sheet) {
         console.log(`cell ${s} does not have an integer value`);
         return;
       }
-      if (cellContent && cellContent.length && allNum) {
+      if (cellContent && allNum) {
         postfixArray[i] = parseInt(cellContent);
       } else {
         postfixArray[i] = 0;
