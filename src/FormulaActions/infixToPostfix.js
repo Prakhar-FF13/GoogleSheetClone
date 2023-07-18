@@ -124,10 +124,11 @@ export function getCellValuesInPostfix(postfixArray, activeCellId, sheet) {
       let s = postfixArray[i];
 
       if (activeCellId === s) {
-        alert(
-          "Please select another cell to store the result, formula cannot contain the same cell where the result is to be stored."
-        );
-        return;
+        return [
+          [],
+          [],
+          "Please select another cell to store the result, formula cannot contain the same cell where the result is to be stored.",
+        ];
       }
 
       // the cell value is dependent on these cells. whenever these cells change, active cells content will also change.
@@ -140,8 +141,7 @@ export function getCellValuesInPostfix(postfixArray, activeCellId, sheet) {
         allNum &= cellContent[j] >= "0" && cellContent[j] <= "9";
       }
       if (allNum === false) {
-        console.log(`cell ${s} does not have an integer value`);
-        return;
+        return [[], [], `cell ${s} does not have an integer value`];
       }
       if (cellContent && allNum) {
         postfixArray[i] = parseInt(cellContent);

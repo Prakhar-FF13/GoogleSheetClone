@@ -8,6 +8,7 @@ import {
 import {
   AddDependentCell,
   ChangeActiveCellProperties,
+  ReevaluateFormula,
   RemoveDependentCell,
 } from "../reducer";
 
@@ -47,8 +48,6 @@ export default function FormulaActions({
     };
   }, [activeCellId, currentSheet, sheet]);
 
-  console.log(sheet);
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && fx && fx.length) {
       const [formulaArrayPostfix, err] = infixToPostfix(fx);
@@ -58,22 +57,32 @@ export default function FormulaActions({
         return;
       }
 
-      const [postfixArray, dependentOn] = getCellValuesInPostfix(
+      const [postfixArray, dependentOn, err2] = getCellValuesInPostfix(
         formulaArrayPostfix,
         activeCellId,
         sheet
       );
 
-      const [val, err2] = evaluatePostFix(postfixArray);
-
       if (err2) {
         console.log(err2);
+        alert(err2);
         return;
       }
 
       dispatch(
-        ChangeActiveCellProperties(activeCellId, currentSheet, "content", val)
+        ChangeActiveCellProperties(activeCellId, currentSheet, "formula", fx)
       );
+
+      const [, err3] = evaluatePostFix(postfixArray);
+
+      if (err3) {
+        alert(err3);
+        console.log(err3);
+        dispatch(
+          ChangeActiveCellProperties(activeCellId, currentSheet, "formula", "")
+        );
+        return;
+      }
 
       // remove old formula dependencies.
       if (
@@ -85,12 +94,10 @@ export default function FormulaActions({
         dispatch(RemoveDependentCell(activeCellId, currentSheet));
       }
 
-      dispatch(
-        ChangeActiveCellProperties(activeCellId, currentSheet, "formula", fx)
-      );
-
       // add new formula dependencies.
       dispatch(AddDependentCell(activeCellId, dependentOn, currentSheet));
+
+      dispatch(ReevaluateFormula(activeCellId, currentSheet));
     }
   };
 

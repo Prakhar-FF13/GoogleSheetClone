@@ -34,7 +34,14 @@ function createSheet() {
   return sheet;
 }
 
-function ReevaluateFormulaRecursive(cellId, currentSheet, draft) {
+function ReevaluateFormulaRecursive(cellId, currentSheet, draft, visited) {
+  if (visited[cellId] === 1) {
+    alert("Cyclic Dependency Detected, Please change formula");
+    return false;
+  }
+
+  visited[cellId] = 1;
+
   const cellRow = cellId.slice(1),
     cellCol = cellId[0],
     formula = draft[currentSheet][cellRow][cellCol].formula;
@@ -43,27 +50,41 @@ function ReevaluateFormulaRecursive(cellId, currentSheet, draft) {
 
   if (err) {
     console.log(err);
-    return;
+    return false;
   }
 
-  const [postfixArray] = getCellValuesInPostfix(
+  const [postfixArray, err2] = getCellValuesInPostfix(
     formulaArrayPostfix,
     cellId,
     draft[currentSheet]
   );
 
-  const [val, err2] = evaluatePostFix(postfixArray);
-
   if (err2) {
     console.log(err2);
-    return;
+    alert(err2);
+    return false;
   }
 
+  const [val, err3] = evaluatePostFix(postfixArray);
+
+  if (err3) {
+    console.log(err3);
+    return false;
+  }
+
+  const prevVal = draft[currentSheet][cellRow][cellCol]["content"];
   draft[currentSheet][cellRow][cellCol]["content"] = val;
 
   draft[currentSheet][cellRow][cellCol].dependentCells.forEach((cid) => {
-    ReevaluateFormulaRecursive(cid, currentSheet, draft);
+    if (!ReevaluateFormulaRecursive(cid, currentSheet, draft, visited)) {
+      draft[currentSheet][cellRow][cellCol]["content"] = prevVal;
+      return false;
+    }
   });
+
+  visited[cellId] = 2;
+
+  return true;
 }
 
 export default function reducer(draft, action) {
@@ -113,7 +134,13 @@ export default function reducer(draft, action) {
 
       break;
     case "REEVALUATE_FORMULA":
-      ReevaluateFormulaRecursive(action.cellId, action.currentSheet, draft);
+      const visited = {};
+      ReevaluateFormulaRecursive(
+        action.cellId,
+        action.currentSheet,
+        draft,
+        visited
+      );
       break;
     default:
       break;
