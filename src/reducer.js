@@ -53,7 +53,7 @@ function ReevaluateFormulaRecursive(cellId, currentSheet, draft, visited) {
     return false;
   }
 
-  const [postfixArray, err2] = getCellValuesInPostfix(
+  const [postfixArray, _, err2] = getCellValuesInPostfix(
     formulaArrayPostfix,
     cellId,
     draft[currentSheet]

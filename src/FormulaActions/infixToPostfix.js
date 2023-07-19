@@ -137,7 +137,9 @@ export function getCellValuesInPostfix(postfixArray, activeCellId, sheet) {
 
       let allNum = true;
       // check if cell content is numbers only.
-      for (let j = 0; j < cellContent.length; j++) {
+      let j = 0;
+      if (cellContent.length && cellContent[j] == "-") j++;
+      for (; j < cellContent.length; j++) {
         allNum &= cellContent[j] >= "0" && cellContent[j] <= "9";
       }
       if (allNum === false) {
@@ -167,13 +169,13 @@ export function evaluatePostFix(postfixArray) {
           stack.push(x + y);
           break;
         case "-":
-          stack.push(x - y);
+          stack.push(y - x);
           break;
         case "*":
           stack.push(x * y);
           break;
         case "/":
-          stack.push(x / y);
+          stack.push(y / x);
           break;
         case "^":
           stack.push(x ^ y);
