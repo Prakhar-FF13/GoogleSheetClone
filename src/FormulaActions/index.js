@@ -54,6 +54,7 @@ export default function FormulaActions({
 
       if (err) {
         console.log(err);
+        alert(err);
         return;
       }
 
@@ -113,6 +114,7 @@ export default function FormulaActions({
             handleKeyDown(e);
           }}
           value={fx}
+          disabled={!activeCellId}
           onChange={(e) => setFx(e.target.value)}
         />
       </div>

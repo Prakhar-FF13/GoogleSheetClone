@@ -50,6 +50,7 @@ function ReevaluateFormulaRecursive(cellId, currentSheet, draft, visited) {
 
   if (err) {
     console.log(err);
+    alert(err);
     return false;
   }
 
@@ -69,6 +70,7 @@ function ReevaluateFormulaRecursive(cellId, currentSheet, draft, visited) {
 
   if (err3) {
     console.log(err3);
+    alert(err3);
     return false;
   }
 
@@ -117,6 +119,7 @@ export default function reducer(draft, action) {
 
       if (err) {
         console.log(err);
+        alert(err);
         return;
       }
 
