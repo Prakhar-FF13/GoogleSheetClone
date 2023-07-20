@@ -1,22 +1,24 @@
 .sheetbar-container {
   display: flex;
-  padding: 8px;
+  padding: 0 8px 0px 8px;
   align-items: center;
   height: 3rem;
+  background-color: #f2f2f2;
 }
 
 .sheetbar-items {
   margin: 0 8px;
   cursor: pointer;
-  display: inline-block;
-  height: 24px;
+  display: flex;
+  height: 100%;
   font-size: 20px;
+  align-items: center;
 }
 
 .sheet-switch-button {
-  text-decoration: underline;
+  padding: 0 8px;
 }
 
 .current-sheet {
-  background-color: aliceblue;
+  background-color: rgb(162, 212, 255);
 }

@@ -1,11 +1,24 @@
 .page-actions-container {
   display: flex;
-  padding: 8px;
   align-items: flex-end;
+  padding: 8px 8px 0px 8px;
   height: 3rem;
+  background-color: #298219;
+  color: white;
+  width: 100%;
 }
 
 .page-actions {
   margin: 0 8px;
-  cursor: pointer;
+  font-size: 18px;
+  height: 100%;
+  padding-top: auto;
+  display: flex;
+  align-items: center;
+}
+
+.page-actions-active {
+  background-color: #f2f2f2;
+  color: black;
+  padding: 0 8px;
 }
