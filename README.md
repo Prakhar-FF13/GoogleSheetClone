@@ -18,13 +18,13 @@
    7. Color.
    8. Background Color.
 3. Creating and Editing multiple sheets.
+4. Formula Evaluation.
 
 #### In Development:
 
-1. Formula Evaluation.
-2. Convert sheets to csv.
-3. Converting from csv to app sheets.
-4. Copy & Pasting of cells including their styles.
+1. Convert sheets to csv.
+2. Converting from csv to app sheets.
+3. Copy & Pasting of cells including their styles.
 
 #### Some Insights:
 
