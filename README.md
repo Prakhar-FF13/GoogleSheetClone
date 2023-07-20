@@ -19,6 +19,9 @@
    8. Background Color.
 3. Creating and Editing multiple sheets.
 4. Formula Evaluation.
+   1. Dependent cell value change causes other cell which are dependent on this to update as well.
+   2. Changing the cell contents of a cell directly removes the formula from the content cell directly.
+   3. Formula Evaluation does not support unary operators. eg to do 10 * (-20) write the formula as 10 * (0 - 20) {unary '-' is not supported}
 
 #### In Development:
 
@@ -35,3 +38,5 @@
 - CSS:
   - Flexbox is used heavily.
   - Some tricks involving opacity set to 0, to hide a component but make sure it's clickable etc were used to display icons for color changing.
+- Using infix to postfix conversion and postfix evaluation to parse and evaluate the formula.
+- DFS Cycle detection was used to detect if some formula is recursive in nature or not.
