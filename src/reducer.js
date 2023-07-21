@@ -5,29 +5,34 @@ import {
   getCellValuesInPostfix,
 } from "./FormulaActions/infixToPostfix";
 
+function createCellState(col, row) {
+  return {
+    id: col + row,
+    content: "",
+    bold: false,
+    italic: false,
+    underline: false,
+    alignment: "left",
+    fontFamily: "arial",
+    fontSize: 14,
+    color: "black",
+    backgroundColor: "white",
+    dependentCells: new Set(),
+    formula: "",
+  };
+}
+
 function createSheet() {
   const sheet = {
     numRows: 50,
     activeCell: null,
+    clipboardCell: null,
   };
 
   for (let i = 1; i <= 50; i++) {
     sheet[i] = {};
     for (let j = 0; j < 26; j++) {
-      sheet[i][alphabet[j]] = {
-        id: alphabet[j] + i,
-        content: "",
-        bold: false,
-        italic: false,
-        underline: false,
-        alignment: "left",
-        fontFamily: "arial",
-        fontSize: 14,
-        color: "black",
-        backgroundColor: "white",
-        dependentCells: new Set(),
-        formula: "",
-      };
+      sheet[i][alphabet[j]] = createCellState(alphabet[j], i);
     }
   }
 
@@ -149,6 +154,23 @@ export default function reducer(draft, action) {
       );
       if (!ok) alert(errReEval);
       break;
+    case "COPY_CELL":
+      draft[action.currentSheet]["clipboardCell"] = action.cellState;
+      break;
+    case "CUT_CELL":
+      draft[action.currentSheet]["clipboardCell"] = action.cellState;
+      draft[action.currentSheet][action.cellState.id.slice(1)][
+        action.cellState.id[0]
+      ] = createCellState(action.cellState.id[0], action.cellState.id.slice(1));
+      break;
+    case "PASTE_CELL":
+      draft[action.currentSheet][action.activeCellId.slice(1)][
+        action.activeCellId[0]
+      ] = draft[action.currentSheet]["clipboardCell"];
+      draft[action.currentSheet][action.activeCellId.slice(1)][
+        action.activeCellId[0]
+      ].id = action.activeCellId;
+      break;
     default:
       break;
   }
@@ -198,6 +220,30 @@ export const ReevaluateFormula = (cellId, currentSheet) => {
   return {
     type: "REEVALUATE_FORMULA",
     cellId,
+    currentSheet,
+  };
+};
+
+export const CopyCell = (cellState, currentSheet) => {
+  return {
+    type: "COPY_CELL",
+    cellState,
+    currentSheet,
+  };
+};
+
+export const CutCell = (cellState, currentSheet) => {
+  return {
+    type: "CUT_CELL",
+    cellState,
+    currentSheet,
+  };
+};
+
+export const PasteCell = (activeCellId, currentSheet) => {
+  return {
+    type: "PASTE_CELL",
+    activeCellId,
     currentSheet,
   };
 };

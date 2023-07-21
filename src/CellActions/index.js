@@ -1,8 +1,14 @@
-import { ChangeActiveCellProperties } from "../reducer";
+import {
+  ChangeActiveCellProperties,
+  CopyCell,
+  CutCell,
+  PasteCell,
+} from "../reducer";
 import "./CellActions.css";
 import {
   ContentCopy,
   ContentCut,
+  ContentPaste,
   FormatAlignCenter,
   FormatAlignLeft,
   FormatAlignRight,
@@ -114,12 +120,35 @@ export default function CellActions({ activeCell, dispatch, currentSheet }) {
 
   return (
     <div className="cell-actions-container">
-      <ContentCopy className="cell-actions" />
-      <ContentCut className="cell-actions" />
+      <ContentCopy
+        className="cell-actions"
+        onClick={() =>
+          activeCell &&
+          activeCell.id &&
+          dispatch(CopyCell(activeCell, currentSheet))
+        }
+      />
+      <ContentCut
+        className="cell-actions"
+        onClick={() =>
+          activeCell &&
+          activeCell.id &&
+          dispatch(CutCell(activeCell, currentSheet))
+        }
+      />
+      <ContentPaste
+        className="cell-actions"
+        onClick={() =>
+          activeCell &&
+          activeCell.id &&
+          dispatch(PasteCell(activeCell.id, currentSheet))
+        }
+      />
       <select
         className="cell-actions font-dropdown"
         value={activeCell && activeCell.fontFamily}
-        onClick={(e) => changeFontFamily(e)}
+        onClick={(e) => activeCell && activeCell.id && changeFontFamily(e)}
+        disabled={activeCell && activeCell.id ? false : true}
       >
         <option value="Montserrat">Montserrat</option>
         <option value="Raleway">Raleway</option>
@@ -130,7 +159,8 @@ export default function CellActions({ activeCell, dispatch, currentSheet }) {
       <select
         className="cell-actions font-dropdown"
         value={activeCell.fontSize}
-        onClick={(e) => changeFontSize(e)}
+        onClick={(e) => activeCell && activeCell.id && changeFontSize(e)}
+        disabled={activeCell && activeCell.id ? false : true}
       >
         <option value="10">10</option>
         <option value="12">12</option>
@@ -147,38 +177,38 @@ export default function CellActions({ activeCell, dispatch, currentSheet }) {
         className={`cell-actions ${
           activeCell.bold ? "cell-action-selected" : ""
         }`}
-        onClick={() => changeBoldProp()}
+        onClick={() => activeCell && activeCell.id && changeBoldProp()}
       />
       <FormatItalic
         className={`cell-actions ${
           activeCell.italic ? "cell-action-selected" : ""
         }`}
-        onClick={() => changeItalicProp()}
+        onClick={() => activeCell && activeCell.id && changeItalicProp()}
       />
       <FormatUnderlined
         className={`cell-actions ${
           activeCell.underline ? "cell-action-selected" : ""
         }`}
         name="underline"
-        onClick={() => changeUnderlineProp()}
+        onClick={() => activeCell && activeCell.id && changeUnderlineProp()}
       />
       <FormatAlignLeft
         className={`cell-actions ${
           activeCell.alignment === "left" ? "cell-action-selected" : ""
         }`}
-        onClick={() => changeAlignment("left")}
+        onClick={() => activeCell && activeCell.id && changeAlignment("left")}
       />
       <FormatAlignCenter
         className={`cell-actions ${
           activeCell.alignment === "center" ? "cell-action-selected" : ""
         }`}
-        onClick={() => changeAlignment("center")}
+        onClick={() => activeCell && activeCell.id && changeAlignment("center")}
       />
       <FormatAlignRight
         className={`cell-actions ${
           activeCell.alignment === "right" ? "cell-action-selected" : ""
         }`}
-        onClick={() => changeAlignment("right")}
+        onClick={() => activeCell && activeCell.id && changeAlignment("right")}
       />
       <div className="cell-actions cell-action-choose-color">
         <FormatColorText />
@@ -187,6 +217,7 @@ export default function CellActions({ activeCell, dispatch, currentSheet }) {
           className="cell-action-color-input"
           onChange={(e) => changeTextColor(e.target.value)}
           value={activeCell.color || "black"}
+          disabled={activeCell && activeCell.id ? false : true}
         />
       </div>
       <div className="cell-actions cell-action-choose-color">
@@ -196,6 +227,7 @@ export default function CellActions({ activeCell, dispatch, currentSheet }) {
           className="cell-action-color-input"
           onChange={(e) => changeBackgroundColor(e.target.value)}
           value={activeCell.backgroundColor || "white"}
+          disabled={activeCell && activeCell.id ? false : true}
         />
       </div>
     </div>
