@@ -36,8 +36,7 @@ function createSheet() {
 
 function ReevaluateFormulaRecursive(cellId, currentSheet, draft, visited) {
   if (visited[cellId] === 1) {
-    alert("Cyclic Dependency Detected, Please change formula");
-    return false;
+    return [false, "Cyclic Dependency Detected, Please change formula"];
   }
 
   visited[cellId] = 1;
@@ -50,8 +49,7 @@ function ReevaluateFormulaRecursive(cellId, currentSheet, draft, visited) {
 
   if (err) {
     console.log(err);
-    alert(err);
-    return false;
+    return [false, err];
   }
 
   const [postfixArray, _, err2] = getCellValuesInPostfix(
@@ -62,31 +60,36 @@ function ReevaluateFormulaRecursive(cellId, currentSheet, draft, visited) {
 
   if (err2) {
     console.log(err2);
-    alert(err2);
-    return false;
+    return [false, err2];
   }
 
   const [val, err3] = evaluatePostFix(postfixArray);
 
   if (err3) {
     console.log(err3);
-    alert(err3);
-    return false;
+    return [false, err3];
   }
 
   const prevVal = draft[currentSheet][cellRow][cellCol]["content"];
   draft[currentSheet][cellRow][cellCol]["content"] = val;
 
-  draft[currentSheet][cellRow][cellCol].dependentCells.forEach((cid) => {
-    if (!ReevaluateFormulaRecursive(cid, currentSheet, draft, visited)) {
+  for (const cid of draft[currentSheet][cellRow][cellCol].dependentCells) {
+    const [ok, err4] = ReevaluateFormulaRecursive(
+      cid,
+      currentSheet,
+      draft,
+      visited
+    );
+
+    if (!ok) {
       draft[currentSheet][cellRow][cellCol]["content"] = prevVal;
-      return false;
+      return [false, err4];
     }
-  });
+  }
 
   visited[cellId] = 2;
 
-  return true;
+  return [true, null];
 }
 
 export default function reducer(draft, action) {
@@ -138,12 +141,13 @@ export default function reducer(draft, action) {
       break;
     case "REEVALUATE_FORMULA":
       const visited = {};
-      ReevaluateFormulaRecursive(
+      const [ok, errReEval] = ReevaluateFormulaRecursive(
         action.cellId,
         action.currentSheet,
         draft,
         visited
       );
+      if (!ok) alert(errReEval);
       break;
     default:
       break;
