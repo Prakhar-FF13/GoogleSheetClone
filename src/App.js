@@ -40,6 +40,11 @@ function App() {
         }
         dispatch={dispatch}
         currentSheet={currentSheet}
+        clipBoardCell={
+          currentSheet &&
+          state[currentSheet] &&
+          state[currentSheet]["clipboardCell"]
+        }
       />
       <FormulaActions
         activeCellId={

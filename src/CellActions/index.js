@@ -1,4 +1,5 @@
 import {
+  AddDependentCell,
   ChangeActiveCellProperties,
   CopyCell,
   CutCell,
@@ -24,7 +25,12 @@ import {
  * It used the activeCell info from main state and uses dispatch to send updates styles.
  *
  */
-export default function CellActions({ activeCell, dispatch, currentSheet }) {
+export default function CellActions({
+  activeCell,
+  dispatch,
+  currentSheet,
+  clipBoardCell,
+}) {
   if (!activeCell) activeCell = {};
 
   const changeFontFamily = (e) => {
@@ -118,6 +124,15 @@ export default function CellActions({ activeCell, dispatch, currentSheet }) {
       );
   };
 
+  const handlePaste = () => {
+    if (!activeCell && !activeCell.id) return;
+    dispatch(PasteCell(activeCell.id, currentSheet));
+    if (clipBoardCell)
+      dispatch(
+        AddDependentCell(activeCell.id, clipBoardCell.formula, currentSheet)
+      );
+  };
+
   return (
     <div className="cell-actions-container">
       <ContentCopy
@@ -136,14 +151,7 @@ export default function CellActions({ activeCell, dispatch, currentSheet }) {
           dispatch(CutCell(activeCell, currentSheet))
         }
       />
-      <ContentPaste
-        className="cell-actions"
-        onClick={() =>
-          activeCell &&
-          activeCell.id &&
-          dispatch(PasteCell(activeCell.id, currentSheet))
-        }
-      />
+      <ContentPaste className="cell-actions" onClick={() => handlePaste()} />
       <select
         className="cell-actions font-dropdown"
         value={activeCell && activeCell.fontFamily}
