@@ -112,7 +112,39 @@ export default function reducer(draft, action) {
       ] = action.value;
       break;
     case "ADD_DEPENDENT_CELLS":
-      action.dependentOn.forEach((id) => {
+      const [fAPostfix, ea1] = infixToPostfix(action.fx);
+
+      if (ea1) {
+        console.log(ea1);
+        alert(ea1);
+        return;
+      }
+
+      const [pfAr, dadcOn, ea2] = getCellValuesInPostfix(
+        fAPostfix,
+        action.activeCellId,
+        draft[action.currentSheet]
+      );
+
+      if (ea2) {
+        console.log(ea2);
+        alert(ea2);
+        return;
+      }
+
+      const [, err3] = evaluatePostFix(pfAr);
+
+      if (err3) {
+        alert(err3);
+        console.log(err3);
+        return;
+      }
+
+      draft[action.currentSheet][action.activeCellId.slice(1)][
+        action.activeCellId[0]
+      ]["formula"] = action.fx;
+
+      dadcOn.forEach((id) => {
         draft[action.currentSheet][id.slice(1)][id[0]].dependentCells.add(
           action.activeCellId
         );
@@ -199,11 +231,11 @@ export const ChangeActiveCellProperties = (
   };
 };
 
-export const AddDependentCell = (activeCellId, dependentOn, currentSheet) => {
+export const AddDependentCell = (activeCellId, fx, currentSheet) => {
   return {
     type: "ADD_DEPENDENT_CELLS",
     activeCellId,
-    dependentOn,
+    fx,
     currentSheet,
   };
 };

@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import "./FormulaActions.css";
 import {
-  infixToPostfix,
-  evaluatePostFix,
-  getCellValuesInPostfix,
-} from "./infixToPostfix";
-import {
   AddDependentCell,
-  ChangeActiveCellProperties,
   ReevaluateFormula,
   RemoveDependentCell,
 } from "../reducer";
@@ -50,57 +44,13 @@ export default function FormulaActions({
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && fx && fx.length) {
-      const [formulaArrayPostfix, err] = infixToPostfix(fx);
-
-      if (err) {
-        console.log(err);
-        alert(err);
-        return;
-      }
-
-      const [postfixArray, dependentOn, err2] = getCellValuesInPostfix(
-        formulaArrayPostfix,
-        activeCellId,
-        sheet
-      );
-
-      if (err2) {
-        console.log(err2);
-        alert(err2);
-        return;
-      }
-
-      dispatch(
-        ChangeActiveCellProperties(activeCellId, currentSheet, "formula", fx)
-      );
-
-      const [, err3] = evaluatePostFix(postfixArray);
-
-      if (err3) {
-        alert(err3);
-        console.log(err3);
-        dispatch(
-          ChangeActiveCellProperties(activeCellId, currentSheet, "formula", "")
-        );
-        return;
-      }
-
-      // remove old formula dependencies.
-      if (
-        sheet &&
-        activeCellId &&
-        activeCellId.length >= 2 &&
-        sheet[activeCellId.slice(1)][activeCellId[0]].formula
-      ) {
-        dispatch(RemoveDependentCell(activeCellId, currentSheet));
-      }
-
-      // add new formula dependencies.
-      dispatch(AddDependentCell(activeCellId, dependentOn, currentSheet));
-
+      dispatch(RemoveDependentCell(activeCellId, currentSheet));
+      dispatch(AddDependentCell(activeCellId, fx, currentSheet));
       dispatch(ReevaluateFormula(activeCellId, currentSheet));
     }
   };
+
+  console.log(sheet);
 
   return (
     <div className="formula-container">
