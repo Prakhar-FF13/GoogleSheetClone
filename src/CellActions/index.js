@@ -4,6 +4,7 @@ import {
   CopyCell,
   CutCell,
   PasteCell,
+  ReevaluateFormula,
 } from "../reducer";
 import "./CellActions.css";
 import {
@@ -127,10 +128,12 @@ export default function CellActions({
   const handlePaste = () => {
     if (!activeCell && !activeCell.id) return;
     dispatch(PasteCell(activeCell.id, currentSheet));
-    if (clipBoardCell)
+    if (clipBoardCell) {
       dispatch(
         AddDependentCell(activeCell.id, clipBoardCell.formula, currentSheet)
       );
+      dispatch(ReevaluateFormula(activeCell.id, currentSheet));
+    }
   };
 
   return (
