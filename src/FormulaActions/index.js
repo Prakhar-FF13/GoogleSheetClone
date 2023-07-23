@@ -50,6 +50,8 @@ export default function FormulaActions({
     }
   };
 
+  console.log(sheet);
+
   return (
     <div className="formula-container">
       <div className="formula-items formula-active-cell">{activeCellId}</div>

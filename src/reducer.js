@@ -5,6 +5,39 @@ import {
   getCellValuesInPostfix,
 } from "./FormulaActions/infixToPostfix";
 
+function solveFormula(cellId, draft, currentSheet) {
+  const cellRow = cellId.slice(1),
+    cellCol = cellId[0],
+    formula = draft[currentSheet][cellRow][cellCol].formula;
+
+  const [formulaArrayPostfix, err] = infixToPostfix(formula);
+
+  if (err) {
+    console.log(err);
+    return [null, null, null, null, err];
+  }
+
+  const [postfixArray, dependentOn, err2] = getCellValuesInPostfix(
+    formulaArrayPostfix,
+    cellId,
+    draft[currentSheet]
+  );
+
+  if (err2) {
+    console.log(err2);
+    return [formulaArrayPostfix, null, null, null, err2];
+  }
+
+  const [val, err3] = evaluatePostFix(postfixArray);
+
+  if (err3) {
+    console.log(err3);
+    return [formulaArrayPostfix, postfixArray, null, null, err];
+  }
+
+  return [formulaArrayPostfix, postfixArray, dependentOn, val, null];
+}
+
 function createCellState(col, row) {
   return {
     id: col + row,
@@ -47,32 +80,13 @@ function ReevaluateFormulaRecursive(cellId, currentSheet, draft, visited) {
   visited[cellId] = 1;
 
   const cellRow = cellId.slice(1),
-    cellCol = cellId[0],
-    formula = draft[currentSheet][cellRow][cellCol].formula;
+    cellCol = cellId[0];
 
-  const [formulaArrayPostfix, err] = infixToPostfix(formula);
+  const [, , , val, err] = solveFormula(cellId, draft, currentSheet);
 
   if (err) {
     console.log(err);
     return [false, err];
-  }
-
-  const [postfixArray, _, err2] = getCellValuesInPostfix(
-    formulaArrayPostfix,
-    cellId,
-    draft[currentSheet]
-  );
-
-  if (err2) {
-    console.log(err2);
-    return [false, err2];
-  }
-
-  const [val, err3] = evaluatePostFix(postfixArray);
-
-  if (err3) {
-    console.log(err3);
-    return [false, err3];
   }
 
   const prevVal = draft[currentSheet][cellRow][cellCol]["content"];
@@ -112,64 +126,45 @@ export default function reducer(draft, action) {
       ] = action.value;
       break;
     case "ADD_DEPENDENT_CELLS":
-      const [fAPostfix, ea1] = infixToPostfix(action.fx);
-
-      if (ea1) {
-        console.log(ea1);
-        alert(ea1);
-        return;
-      }
-
-      const [pfAr, dadcOn, ea2] = getCellValuesInPostfix(
-        fAPostfix,
-        action.activeCellId,
-        draft[action.currentSheet]
-      );
-
-      if (ea2) {
-        console.log(ea2);
-        alert(ea2);
-        return;
-      }
-
-      const [, err3] = evaluatePostFix(pfAr);
-
-      if (err3) {
-        alert(err3);
-        console.log(err3);
-        return;
-      }
-
       draft[action.currentSheet][action.activeCellId.slice(1)][
         action.activeCellId[0]
       ]["formula"] = action.fx;
 
-      dadcOn.forEach((id) => {
+      const [, , addDepCells, , errAddDepCells] = solveFormula(
+        action.activeCellId,
+        draft,
+        action.currentSheet
+      );
+
+      if (errAddDepCells) {
+        draft[action.currentSheet][action.activeCellId.slice(1)][
+          action.activeCellId[0]
+        ]["formula"] = "";
+        draft[action.currentSheet][action.activeCellId.slice(1)][
+          action.activeCellId[0]
+        ].dependentCells.clear();
+        return;
+      }
+
+      addDepCells.forEach((id) => {
         draft[action.currentSheet][id.slice(1)][id[0]].dependentCells.add(
           action.activeCellId
         );
       });
       break;
     case "REMOVE_DEPENDENT_CELLS":
-      const cellRow = action.activeCellId.slice(1),
-        cellCol = action.activeCellId[0],
-        formula = draft[action.currentSheet][cellRow][cellCol].formula;
+      const [, , removeDepCells, , errRemDep] = solveFormula(
+        action.activeCellId,
+        draft,
+        action.currentSheet
+      );
 
-      const [formulaArrayPostfix, err] = infixToPostfix(formula);
-
-      if (err) {
-        console.log(err);
-        alert(err);
+      if (errRemDep) {
+        console.log(errRemDep);
         return;
       }
 
-      const [, dependentOn] = getCellValuesInPostfix(
-        formulaArrayPostfix,
-        action.activeCellId,
-        draft[action.currentSheet]
-      );
-
-      dependentOn.forEach((id) => {
+      removeDepCells.forEach((id) => {
         draft[action.currentSheet][id.slice(1)][id[0]].dependentCells.delete(
           action.activeCellId
         );
