@@ -14,6 +14,7 @@ function solveFormula(cellId, draft, currentSheet) {
 
   if (err) {
     console.log(err);
+    alert(err);
     return [null, null, null, null, err];
   }
 
@@ -25,6 +26,7 @@ function solveFormula(cellId, draft, currentSheet) {
 
   if (err2) {
     console.log(err2);
+    alert(err2);
     return [formulaArrayPostfix, null, null, null, err2];
   }
 
@@ -32,6 +34,7 @@ function solveFormula(cellId, draft, currentSheet) {
 
   if (err3) {
     console.log(err3);
+    alert(err3);
     return [formulaArrayPostfix, postfixArray, null, null, err];
   }
 
