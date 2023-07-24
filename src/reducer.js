@@ -201,6 +201,27 @@ export default function reducer(draft, action) {
         action.activeCellId[0]
       ].id = action.activeCellId;
       break;
+    case "DOWNLOAD_SHEET":
+      if (!action.currentSheet || action.currentSheet.length === 0) return;
+      const file = new Blob([JSON.stringify(draft[action.currentSheet])], {
+        type: "text/plain",
+      });
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(file);
+      a.download = action.currentSheet + ".txt";
+      a.click();
+
+      break;
+    case "UPLOAD_SHEET":
+      for (let i = 1; i <= action.newSheet.numRows; i++) {
+        for (let j = 0; j < 26; j++) {
+          action.newSheet[i][alphabet[j]].dependentCells = new Set();
+        }
+      }
+
+      draft[action.name] = action.newSheet;
+      break;
     default:
       break;
   }
@@ -275,5 +296,20 @@ export const PasteCell = (activeCellId, currentSheet) => {
     type: "PASTE_CELL",
     activeCellId,
     currentSheet,
+  };
+};
+
+export const DownloadAction = (currentSheet) => {
+  return {
+    type: "DOWNLOAD_SHEET",
+    currentSheet,
+  };
+};
+
+export const UploadAction = (name, newSheet) => {
+  return {
+    type: "UPLOAD_SHEET",
+    name,
+    newSheet,
   };
 };

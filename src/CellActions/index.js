@@ -3,11 +3,15 @@ import {
   ChangeActiveCellProperties,
   CopyCell,
   CutCell,
+  DownloadAction,
   PasteCell,
   ReevaluateFormula,
+  UploadAction,
 } from "../reducer";
 import "./CellActions.css";
 import {
+  CloudDownload,
+  CloudUpload,
   ContentCopy,
   ContentCut,
   ContentPaste,
@@ -136,6 +140,27 @@ export default function CellActions({
     }
   };
 
+  const handleDownload = () => {
+    dispatch(DownloadAction(currentSheet));
+  };
+
+  const handleUpload = (e) => {
+    const fr = new FileReader();
+    const f = e.target.files && e.target.files[0];
+    if (!f || f.type !== "text/plain") return;
+    fr.readAsText(f);
+    fr.onload = () => {
+      try {
+        const sheetJson = JSON.parse(fr.result);
+        dispatch(UploadAction(f.name, sheetJson));
+      } catch (e) {
+        alert(
+          "Error loading sheet, make sure json file in correct format is being uploaded"
+        );
+      }
+    };
+  };
+
   return (
     <div className="cell-actions-container">
       <ContentCopy
@@ -221,25 +246,38 @@ export default function CellActions({
         }`}
         onClick={() => activeCell && activeCell.id && changeAlignment("right")}
       />
-      <div className="cell-actions cell-action-choose-color">
+      <div className="cell-actions cell-action-choose">
         <FormatColorText />
         <input
           type="color"
-          className="cell-action-color-input"
+          className="hidden-input"
           onChange={(e) => changeTextColor(e.target.value)}
           value={activeCell.color || "black"}
           disabled={activeCell && activeCell.id ? false : true}
         />
       </div>
-      <div className="cell-actions cell-action-choose-color">
+      <div className="cell-actions cell-action-choose">
         <FormatColorFill />
         <input
           type="color"
-          className="cell-action-color-input"
+          className="hidden-input"
           onChange={(e) => changeBackgroundColor(e.target.value)}
           value={activeCell.backgroundColor || "white"}
           disabled={activeCell && activeCell.id ? false : true}
         />
+      </div>
+      <div className="cell-actions cell-action-choose">
+        <CloudUpload />
+        <input
+          type="file"
+          name="sheet-upload"
+          id="sheet-upload"
+          className="hidden-input"
+          onChange={(e) => handleUpload(e)}
+        />
+      </div>
+      <div className="cell-actions">
+        <CloudDownload onClick={() => handleDownload()} />
       </div>
     </div>
   );
