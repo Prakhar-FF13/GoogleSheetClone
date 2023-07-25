@@ -214,13 +214,38 @@ export default function reducer(draft, action) {
 
       break;
     case "UPLOAD_SHEET":
+      const cS = action.name.split(".")[0];
+
+      draft[cS] = action.newSheet;
+
       for (let i = 1; i <= action.newSheet.numRows; i++) {
         for (let j = 0; j < 26; j++) {
-          action.newSheet[i][alphabet[j]].dependentCells = new Set();
+          draft[cS][i][alphabet[j]].dependentCells = new Set();
         }
       }
 
-      draft[action.name] = action.newSheet;
+      for (let i = 1; i <= action.newSheet.numRows; i++) {
+        for (let j = 0; j < 26; j++) {
+          const cId = alphabet[j] + i;
+
+          const [, , addDepCells, , errAddDepCells] = solveFormula(
+            cId,
+            draft,
+            cS
+          );
+
+          if (errAddDepCells) {
+            draft[cS][cId.slice(1)][cId[0]]["formula"] = "";
+
+            draft[cS][cId.slice(1)][cId[0]].dependentCells.clear();
+            return;
+          }
+
+          addDepCells.forEach((id) => {
+            draft[cS][id.slice(1)][id[0]].dependentCells.add(cId);
+          });
+        }
+      }
       break;
     default:
       break;
